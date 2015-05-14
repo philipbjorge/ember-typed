@@ -1,0 +1,29 @@
+{
+  "name": "ember-typed",
+  "version": "0.0.1",
+  "description": "Add the ability to use ember-cli with typescript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ember-addon",
+    "typescript"
+  ],
+  "author": "Luca Béla Palkovics",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KoKuToru/ember-typed.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KoKuToru/ember-typed/issues"
+  },
+  "homepage": "https://github.com/KoKuToru/ember-typed",
+  "dependencies": {
+    "ember-cli-version-checker": "^1.0.2",
+    "lodash": "^3.3.1",
+    "object-assign": "^2.0.0",
+    "typescript": "1.5.0-alpha"
+  }
+}
