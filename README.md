@@ -6,7 +6,7 @@
 Adds typescript support to ember-cli.
 
 Uses `Typescript 1.5-alpha`, doesn't work with with `1.5-beta` !   
-Right now, it won't show typescript errors.
+Right now, it won't show any **typescript errors** !
 
 # Blueprints
  * ember g ember-typed  
@@ -30,13 +30,13 @@ Right now, it won't show typescript errors.
  * @Computer(dep1, dep2, dep3, ...)
  * @Action
 
-# How to access ember-obj from typescript-obj
+# How to access ember-obj from ts-obj
 
 * EmTs.Controller: **this.controller**
 * EmTs.Route: **this.route**
 * EmTs.View: **this.view**
 * EmTs.Component: **this.component**
-* EmTs.*: **this.native_ember_object**
+* EmTs.\*: **this.native_ember_object**
 
 # Examples
 Object
