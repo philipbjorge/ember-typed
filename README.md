@@ -2,11 +2,9 @@
 
 **THIS IS AN EXPERIMENT**   
 **SHOULD NOT BE USED FOR PRODUCTION !**
+**THATS SAID, I THINK IT'S PRETTY USEABLE..**
 
-Adds typescript support to ember-cli.
-
-Uses `Typescript 1.5-alpha`, doesn't work with with `1.5-beta` !   
-Right now, it won't show any **typescript errors** !
+Adds typescript support to ember-cli. 
 
 # Blueprints
  * ember g ember-typed  
@@ -73,7 +71,8 @@ Route
 /// <reference path="./../typings/DefinitelyTyped/ember/ember.d.ts"/>
 import Ember from 'ember';
 import EmTs from './../typings/emts';
-import Item, {ItemObject} from './../models/item';
+import Item from './../models/item';
+import {ItemObject} from './../models/item';
 
 class DemoRoute extends EmTs.Route {
 
