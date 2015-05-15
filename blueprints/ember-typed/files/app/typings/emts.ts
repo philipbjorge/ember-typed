@@ -1,3 +1,4 @@
+/// <reference path="./DefinitelyTyped/ember/ember.d.ts"/>
 import Ember from 'ember';
 
 module EmTs {
@@ -103,8 +104,8 @@ module EmTs {
 					/*
 						But fixes the "doesn't react to changes"-Bug
 					*/
-					if (this_._computed) {
-						Ember.run.next(() => {
+					if (this_._computed) {						
+						Ember.run.next(this, () => {
 							this_._computed.forEach((x) => {
 								this.get(x.key);
 							});
@@ -155,7 +156,7 @@ module EmTs {
 		static getProxyClassFor(name:string, T) : Ember.Object {
 			var tmp = Ember.Object.extend(this.getMixinFor(T));
 			tmp[Ember.NAME_KEY] = name;
-			return tmp;
+			return <Ember.Object>tmp;
 		}
 		
 		static returnNative(value: any): any {
@@ -221,7 +222,7 @@ module EmTs {
 		static getProxyClassFor(name: string, T) : Ember.Route {
 			var tmp = Ember.Route.extend(this.getMixinFor(T));
 			tmp[Ember.NAME_KEY] = name;
-			return tmp;
+			return <Ember.Route>tmp;
 		}
 	}
 	
@@ -233,7 +234,7 @@ module EmTs {
 		static getProxyClassFor(name: string, T) : Ember.Controller {
 			var tmp = Ember.Controller.extend(this.getMixinFor(T));
 			tmp[Ember.NAME_KEY] = name;
-			return tmp;
+			return <Ember.Controller>tmp;
 		}
 	}
 	
@@ -257,7 +258,7 @@ module EmTs {
 		static getProxyClassFor(name: string, T) : Ember.View {
 			var tmp = Ember.View.extend(this.getMixinFor(T));
 			tmp[Ember.NAME_KEY] = name;
-			return tmp;
+			return <Ember.View>tmp;
 		}
 	}
 	
@@ -269,7 +270,7 @@ module EmTs {
 		static getProxyClassFor(name: string, T) : Ember.Component {
 			var tmp = Ember.Component.extend(this.getMixinFor(T));
 			tmp[Ember.NAME_KEY] = name;
-			return tmp;
+			return <Ember.Component>tmp;
 		}
 	}
 }

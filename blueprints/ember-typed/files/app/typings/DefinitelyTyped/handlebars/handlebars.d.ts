@@ -180,5 +180,5 @@ declare module hbs {
 }
 
 declare module "handlebars" {
-    export = Handlebars;
+    export default Handlebars;
 }
