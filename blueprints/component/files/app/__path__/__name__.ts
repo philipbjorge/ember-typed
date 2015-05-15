@@ -1,5 +1,5 @@
 /// <reference path="<%= appRoot %>/typings/DefinitelyTyped/ember/ember.d.ts"/>
-import Ember = require("Ember");
+import Ember from 'ember';
 import EmTs from '<%= appRoot %>/typings/emts';
 
 class <%= classifiedModuleName %>Component extends EmTs.Component {
