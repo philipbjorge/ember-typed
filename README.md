@@ -44,7 +44,7 @@ Object
 ----
 ```ts
 /// <reference path="./../typings/DefinitelyTyped/ember/ember.d.ts"/>
-import Ember = require("Ember");
+import Ember from 'ember';
 import EmTs from './../typings/emts';
 
 class ItemObject extends EmTs.EmObject {
@@ -71,17 +71,19 @@ Route
 ----
 ```ts
 /// <reference path="./../typings/DefinitelyTyped/ember/ember.d.ts"/>
-import Ember = require("Ember");
+import Ember from 'ember';
 import EmTs from './../typings/emts';
 import Item, {ItemObject} from './../models/item';
 
 class DemoRoute extends EmTs.Route {
+
+	//INFO: no idea why I need the (<any>Item) cast, shouldn't be required.. 
 	
 	model(): ItemObject[] {
 		return Ember.$.getJSON("http://jsonplaceholder.typicode.com/posts")
 		.then((data) => {
 			return data.map((x) => {
-				return new ItemObject(Item.create(x));
+				return new ItemObject((<any>Item).create(x));
 			});
 		});
 	}
@@ -93,7 +95,7 @@ class DemoRoute extends EmTs.Route {
 	    return Ember.$.getJSON("http://jsonplaceholder.typicode.com/posts")
 	    .then((data) => {
 		    return data.map((x) => {
-			    return Item.create(x);
+			    return (<any>Item).create(x);
 		    });
 	    });
 	}
@@ -113,7 +115,7 @@ Controller
 ----
 ```ts
 /// <reference path="./../typings/DefinitelyTyped/ember/ember.d.ts"/>
-import Ember = require("Ember");
+import Ember from 'ember'
 import EmTs from './../typings/emts';
 
 class DemoController extends EmTs.Controller {
@@ -138,7 +140,7 @@ View
 ----
 ```ts
 /// <reference path="./../typings/DefinitelyTyped/ember/ember.d.ts"/>
-import Ember = require("Ember");
+import Ember from 'ember'
 import EmTs from './../typings/emts';
 
 class DemoView extends EmTs.View {
@@ -157,7 +159,7 @@ Component
 ----
 ```ts
 /// <reference path="./../typings/DefinitelyTyped/ember/ember.d.ts"/>
-import Ember = require("Ember");
+import Ember from 'ember'
 import EmTs from './../typings/emts';
 import Item, {ItemObject} from './../models/item';
 
