@@ -160,7 +160,8 @@ Component
 /// <reference path="./../typings/DefinitelyTyped/ember/ember.d.ts"/>
 import Ember from 'ember'
 import EmTs from './../typings/emts';
-import Item, {ItemObject} from './../models/item';
+import Item from './../models/item';
+import {ItemObject} from './../models/item';
 
 class XDemoComponent extends EmTs.Component {
 	@EmTs.Property() item: ItemObject;
