@@ -70,45 +70,33 @@ module EmTs {
 					
 					//init properties
 					if (this_._property) {
-						for(let i = 0; i < this_._property.length; ++i) {
-							let property = this_._property[i];
-
-							if (this_[property.key] !== undefined) {
-								this.set(property.key, this_[property.key]);
+						this_._property.forEach((x) => {
+							if (this_[x.key] !== undefined) {
+								this.set(x.key, EmObject.returnNative(this_[x.key]));
 							}
 							
 							//install get/set proxy
-							Object.defineProperty(this.__typescript, <string><any>property.key, {
+							Object.defineProperty(this.__typescript, <string><any>x.key, {
 								get: () => {
-									let tmp = this.get(property.bind);
-									if (tmp.__typescript !== undefined) {
-										return tmp.__typescript;
-									}
-									return tmp;
+									return EmObject.returnTyped(this.get(x.bind));
 								},
 								set: (value) => {
-									if (value.__typescript !== undefined) {
-										this.set(property.bind, value.__typescript.native_ember_object);
-										return;
-									}
-									this.set(property.bind, value);
+									this.set(x.bind, EmObject.returnNative(value));
 								}
 							});
-						}
+						});
 					}
 					
 					//init needs
 					if (this_._needs) {
-						for(let i = 0; i < this_._needs.length; ++i) {
-							let needs = this_._needs[i];
-							
+						this_._needs.forEach((x) => {
 							//install get proxy
-							Object.defineProperty(this.__typescript, <string><any>needs.key, {
+							Object.defineProperty(this.__typescript, <string><any>x.key, {
 								get: () => {
-									return this.get(needs.bind);
+									return this.get(x.bind);
 								}
 							});
-						}
+						});
 					}
 					
 					//uhm .. refresh computed ? why do i need this ?
@@ -117,11 +105,9 @@ module EmTs {
 					*/
 					if (this_._computed) {
 						Ember.run.next(() => {
-							for(let i = 0; i < this_._computed.length; ++i) {
-								let computed = this_._computed[i];
-								
-								this.get(computed.key);
-							}
+							this_._computed.forEach((x) => {
+								this.get(x.key);
+							});
 						});
 					}
 					
@@ -129,59 +115,38 @@ module EmTs {
 				}.on("init")
 			};
 			
-			var this_ = (<any>T).prototype;
+			var this_ = <IEmberHelper>(<any>T).prototype;
 			
 			//setup properties
 			if (this_._property) {
-				for(let i = 0; i < this_._property.length; ++i) {
-					let property = this_._property[i];
-					if (this_[property.key] !== undefined) {
-						tmp[property.key] = this_[property.key];
-					}
-				}
+				this_._property.forEach((x) => {
+					tmp[x.key] = EmObject.returnNative(this_[x.key]);
+				});
 			}
 			
 			//setup computed 
 			if (this_._computed) {
-				for(let i = 0; i < this_._computed.length; ++i) {
-					let computed = this_._computed[i];
-					
-					let params = <any[]>computed.arguments.slice(0);
-					params.push(function (key, value) {
-						if (value !== undefined && value.__typescript !== undefined) {
-							value = value.__typescript;
-						}
-						let tmp = this.__typescript[computed.key].apply(this.__typescript, [key, value]);
-						if (tmp.__typescript !== undefined) {
-							return tmp.__typescript.native_ember_object
-						}
-						return tmp;
-					});
-					
-					tmp[computed.key] = Ember.computed.apply(this, params);
-				}
+				this_._computed.forEach((x) => {
+					tmp[x.key] = Ember.computed.apply(this, <any[]>x.arguments.concat(function (key, value) {
+						return EmObject.returnNative(this.__typescript[x.key].apply(this.__typescript, [key, EmObject.returnTyped(value)]));
+					}));
+				});
 			}
 			
 			//setup actions, can only be when view, component, route.. but who cares ?
 			if (this_._action) {
-				tmp["actions"] = {};		
-				for(let i = 0; i < this_._action.length; ++i) {
-					let action = this_._action[i];
-					
-					tmp["actions"][action.key] = function(...args: any[]) {
-						return this.__typescript[action.key].apply(this.__typescript, args);
-					}				
-				}
+				tmp["actions"] = this_._action.reduce((prev: any, current) => {
+					prev[current.key] = function(...args: any[]) {
+						return this.__typescript[current.key].apply(this.__typescript, EmObject.returnTyped(args));
+					};
+				}, {});
 			}
 			
 			//setup needs
 			if (this_._needs) {
-				tmp["needs"] = [];
-				for(let i = 0; i < this_._needs.length; ++i) {
-					let needs = this_._needs[i];
-					
-					tmp["needs"].push(needs.needs);
-				}
+				tmp["needs"] = this_._needs.map((x) => {
+					return x.needs;
+				});
 			}
 			
 			return tmp;
@@ -192,6 +157,36 @@ module EmTs {
 			tmp[Ember.NAME_KEY] = name;
 			return tmp;
 		}
+		
+		static returnNative(value: any): any {
+			if (value === undefined || value === null) {
+				return value;
+			}
+			//get native ember objects
+			let isArray = Ember.$.isArray(value);
+			value = [].concat(value).map((x) => {
+				if (x !== undefined && x !== null && x instanceof EmObject) {
+					return x.native_ember_object;
+				}
+				return value;
+			});
+			return isArray ? value : value[0];
+		}
+		
+		static returnTyped(value: any): any {
+			if (value === undefined || value === null) {
+				return value;
+			}
+			//get typed objects
+			let isArray = Ember.$.isArray(value);
+			value = [].concat(value).map((x) => {
+				if (x !== undefined && x !== null && x.__typescript !== undefined) {
+					return x.__typescript;
+				}
+				return value;
+			});
+			return isArray ? value : value[0];
+		}
 	}
 	
 	export class Route extends EmObject {
@@ -199,10 +194,26 @@ module EmTs {
 			super(route);
 		}
 		
+		static isPromise(value: any): boolean {
+			// http://stackoverflow.com/questions/13075592/how-can-i-tell-if-an-object-is-a-jquery-promise-deferred
+		    if (typeof value.then !== "function") {
+		        return false;
+		    }
+		    var promiseThenSrc = String($.Deferred().then);
+		    var valueThenSrc = String(value.then);
+		    return promiseThenSrc === valueThenSrc;
+		}
+		
 		static getMixinFor(T) {
 			var tmp = EmObject.getMixinFor(T);
 			tmp["model"] = function(...args: any[]) {
-				return this.__typescript["model"] ? this.__typescript["model"].apply(this.__typescript, args) : undefined;
+				var res = this.__typescript["model"] ? this.__typescript["model"].apply(this.__typescript, EmObject.returnTyped(args)) : undefined;
+				if (Route.isPromise(res)) {
+					return res.then((data) => {
+						return EmObject.returnNative(data);
+					});
+				}
+				return EmObject.returnNative(res);
 			};
 			return tmp;
 		}
@@ -236,9 +247,9 @@ module EmTs {
 			tmp["__init_view"] = function() {
 				//these props can't be dynamicaly changed..
 				let props = ["ariaRole", "attributeBindings", "childViews", "classNameBindings", "classNames", "concatenatedProperties", "elementId", "layoutName"];
-				for (var i = 0; i < props.length; ++i) {
-					this.set(props[i], this.__typescript[props[i]] || this.get(props[i]));
-				}
+				props.forEach((x) => {
+					this.set(x, EmObject.returnNative(this.__typescript[x] || this.get(x)));
+				});
 			}.on("init");
 			return tmp;
 		}

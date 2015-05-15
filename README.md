@@ -29,6 +29,7 @@ Right now, it won't show any **typescript errors** !
  * @Property(name)
  * @Computer(dep1, dep2, dep3, ...)
  * @Action
+ * @Needs(name, bind-name)
 
 # How to access ember-obj from ts-obj
 
@@ -76,14 +77,27 @@ import Item, {ItemObject} from './../models/item';
 
 class DemoRoute extends EmTs.Route {
 	
-	model(): Item[] {
+	model(): ItemObject[] {
 		return Ember.$.getJSON("http://jsonplaceholder.typicode.com/posts")
 		.then((data) => {
 			return data.map((x) => {
-				return Item.create(x);
+				return new ItemObject(Item.create(x));
 			});
 		});
 	}
+	
+	/*
+	Or return ember objects
+	    
+    model(): Item[] {
+	    return Ember.$.getJSON("http://jsonplaceholder.typicode.com/posts")
+	    .then((data) => {
+		    return data.map((x) => {
+			    return Item.create(x);
+		    });
+	    });
+	}
+    */
 	
 	constructor(route: Ember.Route) {
 		super(route);
@@ -103,7 +117,7 @@ import Ember = require("Ember");
 import EmTs from './../typings/emts';
 
 class DemoController extends EmTs.Controller {
-	@EmTs.Property() model: any[];
+	@EmTs.Property() model: ItemObject[];
 	
 	@EmTs.Computed("model", "model.@each")
 	count(): number {
