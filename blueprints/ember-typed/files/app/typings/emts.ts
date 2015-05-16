@@ -63,7 +63,7 @@ module EmTs {
 		}
 		
 		static getMixinFor(T) {
-			var tmp = {
+			let tmp = {
 				__typescript: function() {
 					this.__typescript = new T(this);
 					
@@ -116,7 +116,7 @@ module EmTs {
 				}.on("init")
 			};
 			
-			var this_ = <IEmberHelper>(<any>T).prototype;
+			let this_ = <IEmberHelper>(<any>T).prototype;
 			
 			//setup properties
 			if (this_._property) {
@@ -165,7 +165,7 @@ module EmTs {
 		}
 		
 		static getProxyClassFor(name:string, T) : Ember.Object {
-			var tmp = Ember.Object.extend(this.getMixinFor(T));
+			let tmp = Ember.Object.extend(this.getMixinFor(T));
 			tmp[Ember.NAME_KEY] = name;
 			return <Ember.Object>tmp;
 		}
@@ -211,15 +211,15 @@ module EmTs {
 		    if (typeof value.then !== "function") {
 		        return false;
 		    }
-		    var promiseThenSrc = String($.Deferred().then);
-		    var valueThenSrc = String(value.then);
+		    let promiseThenSrc = String($.Deferred().then);
+		    let valueThenSrc = String(value.then);
 		    return promiseThenSrc === valueThenSrc;
 		}
 		
 		static getMixinFor(T) {
-			var tmp = EmObject.getMixinFor(T);
+			let tmp = EmObject.getMixinFor(T);
 			tmp["model"] = function(...args: any[]) {
-				var res = this.__typescript["model"] ? this.__typescript["model"].apply(this.__typescript, EmObject.returnTyped(args)) : undefined;
+				let res = this.__typescript["model"] ? this.__typescript["model"].apply(this.__typescript, EmObject.returnTyped(args)) : undefined;
 				if (Route.isPromise(res)) {
 					return res.then((data) => {
 						return EmObject.returnNative(data);
@@ -231,7 +231,7 @@ module EmTs {
 		}
 		
 		static getProxyClassFor(name: string, T) : Ember.Route {
-			var tmp = Ember.Route.extend(this.getMixinFor(T));
+			let tmp = Ember.Route.extend(this.getMixinFor(T));
 			tmp[Ember.NAME_KEY] = name;
 			return <Ember.Route>tmp;
 		}
@@ -243,7 +243,7 @@ module EmTs {
 		}
 		
 		static getProxyClassFor(name: string, T) : Ember.Controller {
-			var tmp = Ember.Controller.extend(this.getMixinFor(T));
+			let tmp = Ember.Controller.extend(this.getMixinFor(T));
 			tmp[Ember.NAME_KEY] = name;
 			return <Ember.Controller>tmp;
 		}
@@ -267,7 +267,7 @@ module EmTs {
 		}
 		
 		static getProxyClassFor(name: string, T) : Ember.View {
-			var tmp = Ember.View.extend(this.getMixinFor(T));
+			let tmp = Ember.View.extend(this.getMixinFor(T));
 			tmp[Ember.NAME_KEY] = name;
 			return <Ember.View>tmp;
 		}
@@ -279,7 +279,7 @@ module EmTs {
 		}
 		
 		static getProxyClassFor(name: string, T) : Ember.Component {
-			var tmp = Ember.Component.extend(this.getMixinFor(T));
+			let tmp = Ember.Component.extend(this.getMixinFor(T));
 			tmp[Ember.NAME_KEY] = name;
 			return <Ember.Component>tmp;
 		}
