@@ -140,6 +140,7 @@ module EmTs {
 					prev[current.key] = function(...args: any[]) {
 						return this.__typescript[current.key].apply(this.__typescript, EmObject.returnTyped(args));
 					};
+					return prev;
 				}, {});
 			}
 			
