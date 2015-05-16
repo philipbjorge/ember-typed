@@ -56,6 +56,18 @@ class ItemObject extends EmTs.EmObject {
 		return this.title.toUpperCase();
 	}
 	
+	//Computed-Property via get
+	@EmTs.Computed("body")
+	get bigBody() {
+		return this.body.toUpperCase();
+	}
+	//and set
+	set bigBody(value: string) {
+		//not that this makes sense..
+		this.body = value;
+	}
+	
+	
 	constructor(object: Ember.Object) {
 		super(object);
 	}

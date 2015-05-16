@@ -129,7 +129,17 @@ module EmTs {
 			if (this_._computed) {
 				this_._computed.forEach((x) => {
 					tmp[x.key] = Ember.computed.apply(this, <any[]>x.arguments.concat(function (key, value) {
-						return EmObject.returnNative(this.__typescript[x.key].apply(this.__typescript, [key, EmObject.returnTyped(value)]));
+						if (typeof this.__typescript[x.key] == 'function') {
+							//with classic function
+							return EmObject.returnNative(this.__typescript[x.key].apply(this.__typescript, [key, EmObject.returnTyped(value)]));
+						} else {
+							//with get/set
+							if (arguments.length > 1) {
+								this.__typescript[x.key] = EmObject.returnTyped(value);
+							} else {
+								return EmObject.returnNative(this.__typescript[x.key]);
+							}
+						}
 					}));
 				});
 			}
