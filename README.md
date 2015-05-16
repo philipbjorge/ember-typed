@@ -5,11 +5,9 @@
 **THATS SAID, I THINK IT'S PRETTY USEABLE..**
 
 This AddOn makes it possible to write Ember-Applications with Typescript `1.5+`.
-It adds wrappers for `Ember.Object`, `Ember.Route`, `Ember.Controller`, `Ember.View` and `Ember.Component`.
+It adds wrappers for `Ember.Object`, `Ember.Route`, `Ember.Controller`, `Ember.View` and `Ember.Component` and annotations.
 
-Annotations are used to mark properties as `Property`, `Computed`, `Action` and `Needs`.
-
-Basic structor of a typed Ember class
+Basic structure of a typed Ember class
 ---
 First the includes (*Note: blueprints will generated these parts for you*)
 ```typescript
@@ -25,7 +23,7 @@ class MyObject extends EmTs.EmObject {
 	}
 }
 ```
-them the exports, first the export of your typed class, so it can be used outside
+then the exports, first the export of your typed class, so it can be used outside
 ```typescript
 export {MyObject};
 ```
